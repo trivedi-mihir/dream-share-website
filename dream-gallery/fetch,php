@@ -1,0 +1,23 @@
+<?php
+include 'db.php';
+
+$images = [];
+
+$sql = "SELECT * FROM images ORDER BY likes DESC";
+$result = $conn->query($sql);
+
+while ($row = $result->fetch_assoc()) {
+    $image_id = $row['id'];
+    $comments = [];
+
+    $comment_result = $conn->query("SELECT username, comment FROM comments WHERE image_id = $image_id ORDER BY created_at ASC");
+    while ($comment = $comment_result->fetch_assoc()) {
+        $comments[] = $comment;
+    }
+
+    $row['comments'] = $comments;
+    $images[] = $row;
+}
+
+echo json_encode($images);
+?>
