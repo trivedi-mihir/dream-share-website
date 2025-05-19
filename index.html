@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surprise Gallery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
+      color: #e0f7fa;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.8);
+      color: #f5f5f5;
+      padding: 1rem;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 1s ease-out;
+    }
+
+    /* Menu Bar */
+    nav {
+      background: #203a43;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav ul li {
+      display: inline;
+    }
+
+    nav ul li a {
+      color: #e0f7fa;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #6ab04c;
+    }
+
+    /* Border Section */
+    .border {
+      border: 3px dashed #6ab04c;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      max-width: 600px;
+      border-radius: 20px;
+      background: rgba(9, 189, 249, 0.9);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      animation: scaleIn 1s ease-in-out;
+    }
+
+    #image-form label {
+      color: #333;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+
+    #image-form input,
+    #image-form textarea {
+      margin-bottom: 1rem;
+      padding: 0.7rem;
+      border: 3px solid #0f0d0d;
+      border-radius: 10px;
+      transition: all 0.4s;
+    }
+
+    #image-form textarea {
+      margin-bottom: 0px;
+      padding: 1px;
+    }
+
+    #image-form input:focus,
+    #image-form textarea:focus {
+      border-color: #6ab04c;
+      box-shadow: 0 0 8px rgba(106, 176, 76, 0.6);
+    }
+
+    #image-form button {
+      background: #6ab04c;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.4s;
+    }
+
+    #image-form button:hover {
+      background: #45a049;
+      transform: scale(1.1);
+    }
+
+    #image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem;
+    }
+
+    .image-container {
+      width: 250px;
+      border: 2px solid #1e272e;
+      border-radius: 15px;
+      overflow: hidden;
+      background: #333;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      animation: fadeInUp 0.6s forwards;
+    }
+
+    .image-container:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .image-container img {
+      width: 100%;
+      height: auto;
+      border-bottom: 4px solid #6ab04c;
+    }
+
+    .image-container p {
+      padding: 0.8rem;
+      margin: 0;
+      background: #222;
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .fa-heart, .fa-comment {
+      font-size: 24px;
+      margin: 10px 12px;
+      cursor: pointer;
+      transition: color 0.4s ease, transform 0.4s ease;
+    }
+
+    .fa-heart:hover {
+      color: #ff6b6b;
+      transform: scale(1.3);
+    }
+
+    .fa-comment:hover {
+      color: #6ab04c;
+      transform: scale(1.3);
+    }
+
+    /* Comment Section */
+    .comment-section {
+      background: #333;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 10px;
+      display: none;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .comment-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .comment-section li {
+      background: #444;
+      color: #e0f7fa;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    .comment-section input[type="text"],
+    .comment-section textarea {
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 10px;
+      background: #f1f1f1;
+      color: #333;
+    }
+
+    .comment-section button {
+      background: #6ab04c;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      padding: 10px 15px;
+      font-weight: bold;
+      transition: background 0.4s ease;
+    }
+
+    .comment-section button:hover {
+      background: #4aa847;
+    }
+
+    /* Animations */
+    @keyframes scaleIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Menu */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav ul li {
+        margin: 0.5rem 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>DREAM Gallery</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="dreame.html">Home</a></li>
+      <li><a href="about website.html">About Website</a></li>
+      <li><a href="#">About Creators</a></li>
+      <li><a href="#">Profile</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="border">
+      <form id="image-form">
+        <label for="image-url">Image URL:</label>
+        <input type="text" id="image-url" name="image-url">
+        
+        <label for="image-file">Or Upload Image:</label>
+        <input type="file" id="image-file" name="image-file" accept="image/*">
+
+        <label for="image-caption">Caption:</label>
+        <textarea id="image-caption" name="image-caption" required></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <section id="image-gallery"></section>
+  </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('image-form');
+  const gallery = document.getElementById('image-gallery');
+
+  // Fetch images from backend on load
+  fetchImages();
+
+  // Handle form submit
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const caption = form.elements['image-caption'].value;
+    const imageFile = form.elements['image-file'].files[0];
+
+    if (!imageFile || !caption.trim()) {
+      alert("Please upload an image and write a caption.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('caption', caption);
+    formData.append('image', imageFile);
+
+    fetch('upload.php', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const newImage = {
+            id: data.id,
+            filename: data.filename,
+            caption: data.caption,
+            likes: 0,
+            comments: []
+          };
+          const card = createCard(newImage);
+          gallery.prepend(card);
+          form.reset();
+        } else {
+          alert("Upload failed: " + (data.message || "Unknown error"));
+        }
+      });
+  });
+
+  function fetchImages() {
+    gallery.innerHTML = '';
+    fetch('fetch.php')
+      .then(res => res.json())
+      .then(images => {
+        images.forEach(img => {
+          const card = createCard(img);
+          gallery.appendChild(card);
+        });
+      });
+  }
+
+  function createCard(image) {
+    const card = document.createElement('div');
+    card.className = 'image-container';
+    card.dataset.imageId = image.id;
+    card.dataset.likes = image.likes;
+
+    const img = document.createElement('img');
+    img.src = `uploads/${image.filename}`;
+    img.alt = image.caption;
+
+    const caption = document.createElement('p');
+    caption.textContent = image.caption;
+
+    const likeIcon = document.createElement('i');
+    likeIcon.className = 'fa fa-heart';
+    const likeCounter = document.createElement('span');
+    likeCounter.textContent = ` ${image.likes}`;
+
+    likeIcon.addEventListener('click', function () {
+      const imageId = card.dataset.imageId;
+      fetch('like.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `image_id=${imageId}`
+      })
+        .then(res => res.json())
+        .then(() => {
+          let likes = parseInt(card.dataset.likes) + 1;
+          card.dataset.likes = likes;
+          likeCounter.textContent = ` ${likes}`;
+          sortGallery();
+        });
+    });
+
+    const commentIcon = document.createElement('i');
+    commentIcon.className = 'fa fa-comment';
+    const commentCounter = document.createElement('span');
+    commentCounter.textContent = ` ${image.comments.length}`;
+
+    commentIcon.addEventListener('click', function () {
+      const section = card.querySelector('.comment-section');
+      section.style.display = section.style.display === 'block' ? 'none' : 'block';
+    });
+
+    const commentSection = createCommentSection(image, commentCounter);
+
+    card.append(img, caption, likeIcon, likeCounter, commentIcon, commentCounter, commentSection);
+    return card;
+  }
+
+  function createCommentSection(image, counter) {
+    const section = document.createElement('div');
+    section.className = 'comment-section';
+    const list = document.createElement('ul');
+
+    image.comments.forEach(comment => {
+      const item = document.createElement('li');
+      item.textContent = `${comment.username}: ${comment.comment}`;
+      list.appendChild(item);
+    });
+
+    const form = document.createElement('form');
+    form.innerHTML = `
+      <input type="text" name="username" placeholder="Your name" required />
+      <textarea name="comment" placeholder="Write a comment..." required></textarea>
+      <button type="submit">Submit</button>
+    `;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = form.elements['username'].value;
+      const commentText = form.elements['comment'].value;
+
+      fetch('comment.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `image_id=${image.id}&username=${encodeURIComponent(username)}&comment=${encodeURIComponent(commentText)}`
+      })
+        .then(res => res.json())
+        .then(() => {
+          const item = document.createElement('li');
+          item.textContent = `${username}: ${commentText}`;
+          list.appendChild(item);
+          form.reset();
+          counter.textContent = ` ${list.children.length}`;
+        });
+    });
+
+    section.append(list, form);
+    return section;
+  }
+
+  function sortGallery() {
+    const cards = Array.from(gallery.getElementsByClassName('image-container'));
+    cards.sort((a, b) => parseInt(b.dataset.likes, 10) - parseInt(a.dataset.likes, 10));
+    cards.reverse().forEach(card => gallery.appendChild(card));
+  }
+});
+</script>
+
+
+
+</body>
+</html>
